@@ -417,4 +417,4 @@ FodyWeavers.xsd
 # MY OWN ADDITIONS
 
 # Ignore Osu Map Files
-.osu
+*.osu
