@@ -413,3 +413,8 @@ FodyWeavers.xsd
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,csharp
+
+# MY OWN ADDITIONS
+
+# Ignore Osu Map Files
+.osu
