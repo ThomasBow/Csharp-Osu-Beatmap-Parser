@@ -24,6 +24,12 @@ public class OsuMapParser
         return maps;
     }
 
+    public Map ParseFirst()
+    {
+        string[] files = Directory.GetFiles(osuMapsPath, "*.osu", SearchOption.AllDirectories);
+        return ParseMap(files[0]);
+    }
+
     public Map ParseMap(string osuMapPath)
     {
         string[] lines = File.ReadAllLines(osuMapPath);

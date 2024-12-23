@@ -3,25 +3,42 @@
 
 public class MetaDataSection
 {
-    readonly public string Title;
+    readonly public string Title = string.Empty;
+    readonly public string Artist = string.Empty;
+    public const string Creator = "OsuEPAI";
+    readonly public string Version = string.Empty;
+    readonly public string Source = string.Empty;
+    readonly public string Tags = string.Empty;
 
-    readonly public string Artist;
-
-    readonly public string Creator;
-
-    readonly public string Version;
-
-    readonly public string Source;
-
-    readonly public string Tags;
-
-    public MetaDataSection(string title, string artist, string creator, string version, string source, string tags)
+    public MetaDataSection(string[] lines)
     {
-        Title = title;
-        Artist = artist;
-        Creator = creator;
-        Version = version;
-        Source = source;
-        Tags = tags;
+        foreach (string line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line)) break;
+
+            string[] parts = line.Split(':');
+
+            string key = parts[0].Trim();
+            string value = parts[1].Trim();
+
+            switch (key)
+            {
+                case "Title":
+                    Title = value;
+                    break;
+                case "Artist":
+                    Artist = value;
+                    break;
+                case "Version":
+                    Version = value;
+                    break;
+                case "Source":
+                    Source = value;
+                    break;
+                case "Tags":
+                    Tags = value;
+                    break;
+            }
+        }
     }
 }

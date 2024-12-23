@@ -3,37 +3,39 @@
 
 public class Map
 {
-    readonly public GeneralSection generalSection;
-    readonly public MetaDataSection metaDataSection;
-    readonly public DifficultySection difficultySection;
-    readonly public TimingPointsSection timingPointsSection;
-    readonly public HitObjectsSection hitObjectsSection;
+    public readonly GeneralSection? generalSection;
+    public readonly MetaDataSection? metaDataSection;
+    public readonly DifficultySection? difficultySection;
+    public readonly TimingPointsSection? timingPointsSection;
+    public readonly HitObjectsSection? hitObjectsSection;
 
     public Map(string[] osuMapFileLines)
     {
         for (int i = 0; i < osuMapFileLines.Length; i++)
         {
             string line = osuMapFileLines[i];
+            if (line.StartsWith('[') == false) continue;
 
+            string[] remainingLines = osuMapFileLines[(i + 1)..];
             if (line.StartsWith("[General]"))
             {
-                generalSection = new();
+                generalSection = new(remainingLines);
             }
             else if (line.StartsWith("[Metadata]"))
             {
-                metaDataSection = new();
+                metaDataSection = new(remainingLines);
             }
             else if (line.StartsWith("[Difficulty]"))
             {
-                difficultySection = new();
-            }
-            else if (line.StartsWith("[HitObjects]"))
-            {
-                hitObjectsSection = new();
+                difficultySection = new(remainingLines);
             }
             else if (line.StartsWith("[TimingPoints]"))
             {
-                timingPointsSection = new();
+                timingPointsSection = new(remainingLines);
+            }
+            else if (line.StartsWith("[HitObjects]"))
+            {
+                hitObjectsSection = new(remainingLines);
             }
         }
     }

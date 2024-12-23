@@ -46,16 +46,24 @@ public class HitObject
         type = (HitObjectType)int.Parse(parts[3]);
         hitSound = (HitObjectSound)int.Parse(parts[4]);
 
-        if (type.HasFlag(HitObjectType.Slider))
+        string remaining = StringUtilities.JoinAfter(parts, startIndex: 5, separator: ',');
+        if (type.HasFlag(HitObjectType.Circle))
         {
-            sliderParams = new(parts[5]);
+            sliderParams = null;
+            spinnerParams = null;
+
+            hitSample = ParseHitSample(parts[5]);
+        }
+        else if (type.HasFlag(HitObjectType.Slider))
+        {
+            sliderParams = new(remaining);
             spinnerParams = null;
 
             hitSample = ParseHitSample(sliderParams.rest);
         }
         else if (type.HasFlag(HitObjectType.Spinner))
         {
-            spinnerParams = new(parts[5]);
+            spinnerParams = new(remaining);
             sliderParams = null;
 
             hitSample = ParseHitSample(spinnerParams.rest);

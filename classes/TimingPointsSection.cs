@@ -3,10 +3,18 @@
 
 public class TimingPointsSection
 {
-    public List<TimingPoint> TimingPoints { get; set; }
+    public readonly List<TimingPoint> TimingPoints;
 
-    public TimingPointsSection()
+    public TimingPointsSection(string[] lines)
     {
         TimingPoints = [];
+
+        foreach (string line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line)) break;
+
+            TimingPoint timingPoint = new(line);
+            TimingPoints.Add(timingPoint);
+        }
     }
 }
