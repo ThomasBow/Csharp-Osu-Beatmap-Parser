@@ -34,8 +34,6 @@ public class HitObject
     readonly public SliderObjectParams? sliderParams;
     readonly public SpinnerObjectParams? spinnerParams;
 
-    readonly public List<HitObjectSound> hitSample;
-
     public HitObject(string line)
     {
         string[] parts = line.Split(',');
@@ -51,29 +49,21 @@ public class HitObject
         {
             sliderParams = null;
             spinnerParams = null;
-
-            hitSample = ParseHitSample(parts[5]);
         }
         else if (type.HasFlag(HitObjectType.Slider))
         {
             sliderParams = new(remaining);
             spinnerParams = null;
-
-            hitSample = ParseHitSample(sliderParams.rest);
         }
         else if (type.HasFlag(HitObjectType.Spinner))
         {
             spinnerParams = new(remaining);
             sliderParams = null;
-
-            hitSample = ParseHitSample(spinnerParams.rest);
         }
         else
         {
             sliderParams = null;
             spinnerParams = null;
-
-            hitSample = ParseHitSample(parts[5]);
         }
     }
 
@@ -85,6 +75,8 @@ public class HitObject
 
         foreach (string part in parts)
         {
+            if (string.IsNullOrWhiteSpace(part)) continue;
+
             hitSample.Add((HitObjectSound)int.Parse(part));
         }
 

@@ -2,7 +2,6 @@
 
 
 using System.Numerics;
-using System.Linq;
 
 public class SliderObjectParams
 {
@@ -60,9 +59,17 @@ public class SliderObjectParams
 
     private CurveType ParseCurveType(string curveTypeString)
     {
-        CurveType curveType = (CurveType)int.Parse(curveTypeString);
+        CurveType curveType = letterToCurveType[curveTypeString];
         return curveType;
     }
+
+    private static readonly Dictionary<string, CurveType> letterToCurveType = new()
+    {
+        { "L", CurveType.Linear },
+        { "P", CurveType.Perfect },
+        { "B", CurveType.Bezier },
+        { "C", CurveType.Catmull }
+    };
 
     private List<Vector2> ParseCurvePoints(string curvePoints)
     {

@@ -3,11 +3,12 @@
 
 public class GeneralSection
 {
+
     const string AudioFilename = "audio.mp3";
     readonly int AudioLeadIn = 0;
     readonly int PreviewTime = -1;
     const int Countdown = 0;
-    readonly string SampleSet = "Normal";
+    readonly TimingPoint.SampleSet SampleSet = TimingPoint.SampleSet.Normal;
     readonly double StackLeniency = 0.7;
     const int Mode = 0;
     const bool LetterboxInBreaks = false;
@@ -38,7 +39,7 @@ public class GeneralSection
                     // Do nothing
                     break;
                 case "SampleSet":
-                    SampleSet = value;
+                    SampleSet = Enum.Parse<TimingPoint.SampleSet>(value, ignoreCase: true);
                     break;
                 case "StackLeniency":
                     StackLeniency = double.Parse(value);

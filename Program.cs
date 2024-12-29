@@ -30,6 +30,7 @@ try
 catch (Exception e)
 {
     Console.WriteLine("Exception: " + e.Message);
+    Console.WriteLine("Stack trace: " + e.StackTrace);
     return;
 }
 
