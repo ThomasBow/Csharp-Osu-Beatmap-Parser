@@ -1,7 +1,9 @@
 
 
 
-public class Map
+using Tensorflow.NumPy;
+
+public class Map : ITrainingData
 {
     public readonly GeneralSection generalSection;
     //public readonly MetaDataSection metaDataSection;
@@ -52,5 +54,15 @@ public class Map
         this.difficultySection = difficultySection ?? throw new Exception("Difficulty section not found");
         this.timingPointsSection = timingPointsSection ?? throw new Exception("TimingPoints section not found");
         this.hitObjectsSection = hitObjectsSection ?? throw new Exception("HitObjects section not found");
+    }
+
+    public NDArray X()
+    {
+        throw new NotImplementedException();
+    }
+
+    public NDArray Y()
+    {
+        throw new NotImplementedException();
     }
 }
