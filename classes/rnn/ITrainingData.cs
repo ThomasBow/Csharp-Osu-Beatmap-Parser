@@ -5,6 +5,6 @@ using Tensorflow.NumPy;
 
 public interface ITrainingData
 {
-    public NDArray X { get; }
-    public NDArray Y { get; }
+    public abstract NDArray X();
+    public abstract NDArray Y();
 }
