@@ -1,7 +1,9 @@
 
 
 
-public class Map
+using Tensorflow.NumPy;
+
+public class Map : ITrainingData
 {
     public readonly GeneralSection? generalSection;
     public readonly MetaDataSection? metaDataSection;
@@ -38,5 +40,15 @@ public class Map
                 hitObjectsSection = new(remainingLines);
             }
         }
+    }
+
+    public NDArray X()
+    {
+        throw new NotImplementedException();
+    }
+
+    public NDArray Y()
+    {
+        throw new NotImplementedException();
     }
 }
