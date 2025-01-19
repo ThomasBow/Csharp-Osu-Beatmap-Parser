@@ -11,6 +11,8 @@ public class TimingPointsSection
 
         foreach (string line in lines)
         {
+            Debugger.currentLine = line;
+
             if (string.IsNullOrWhiteSpace(line)) break;
 
             TimingPoint timingPoint = new(line);

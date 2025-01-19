@@ -14,6 +14,8 @@ public class MetaDataSection
     {
         foreach (string line in lines)
         {
+            Debugger.currentLine = line;
+
             if (string.IsNullOrWhiteSpace(line)) break;
 
             string[] parts = line.Split(':');

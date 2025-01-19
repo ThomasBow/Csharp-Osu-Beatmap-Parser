@@ -34,8 +34,12 @@ public class HitObject
     readonly public SliderObjectParams? sliderParams;
     readonly public SpinnerObjectParams? spinnerParams;
 
+    readonly public List<HitObjectSound> hitSample;
+
     public HitObject(string line)
     {
+        Debugger.currentLine = line;
+
         string[] parts = line.Split(',');
 
         x = int.Parse(parts[0]);
@@ -49,26 +53,36 @@ public class HitObject
         {
             sliderParams = null;
             spinnerParams = null;
+
+            string hitSampleString = parts.Length > 5 ? parts[5] : string.Empty;
+            hitSample = ParseHitSample(hitSampleString);
         }
         else if (type.HasFlag(HitObjectType.Slider))
         {
             sliderParams = new(remaining);
             spinnerParams = null;
+            hitSample = ParseHitSample(sliderParams.rest);
         }
         else if (type.HasFlag(HitObjectType.Spinner))
         {
             spinnerParams = new(remaining);
             sliderParams = null;
+            hitSample = ParseHitSample(spinnerParams.rest);
         }
         else
         {
             sliderParams = null;
             spinnerParams = null;
+
+            string hitSampleString = parts.Length > 5 ? parts[5] : string.Empty;
+            hitSample = ParseHitSample(hitSampleString);
         }
     }
 
     private List<HitObjectSound> ParseHitSample(string hitSampleString)
     {
+        if (string.IsNullOrWhiteSpace(hitSampleString)) return [];
+
         List<HitObjectSound> hitSample = [];
 
         string[] parts = hitSampleString.Split(':');

@@ -15,6 +15,8 @@ public class DifficultySection
     {
         foreach (string line in lines)
         {
+            Debugger.currentLine = line;
+
             if (string.IsNullOrWhiteSpace(line)) break;
 
             string[] keyValue = line.Split(':');

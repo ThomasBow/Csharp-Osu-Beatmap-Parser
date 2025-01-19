@@ -30,8 +30,8 @@ public class SliderObjectParams
         string curveParams = splitParams[0];
         string slidesParams = splitParams[1];
         string lengthParams = splitParams[2];
-        string edgeSoundsParams = splitParams[3];
-        string edgeSetsParams = splitParams[4];
+        string edgeSoundsParams = splitParams.Length > 3 ? splitParams[3] : "0";
+        string edgeSetsParams = splitParams.Length > 4 ? splitParams[4] : "0:0";
 
         (curveType, controlPoints) = ParseCurveParams(curveParams);
 

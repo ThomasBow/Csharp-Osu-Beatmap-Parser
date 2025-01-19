@@ -16,21 +16,20 @@ try
 
     OsuMapParser parser = new(folderPath);
 
-    List<Map> maps;
+    List<MapAndKey> maps;
     if (shouldParseAll)
     {
         maps = parser.ParseAllMaps();
     }
     else
     {
-        Map map = parser.ParseFirst();
+        MapAndKey map = parser.ParseFirst();
         maps = [map];
     }
 }
 catch (Exception e)
 {
-    Console.WriteLine("Exception: " + e.Message);
-    Console.WriteLine("Stack trace: " + e.StackTrace);
+    Debugger.Log(e);
     return;
 }
 

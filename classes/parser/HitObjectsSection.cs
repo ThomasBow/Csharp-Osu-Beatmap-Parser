@@ -16,6 +16,8 @@ public class HitObjectsSection
 
         foreach (string line in lines)
         {
+            Debugger.currentLine = line;
+
             if (string.IsNullOrWhiteSpace(line)) break;
 
             HitObject hitObject = new(line);
