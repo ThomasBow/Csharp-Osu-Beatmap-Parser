@@ -2,6 +2,8 @@
 
 using System.Globalization;
 
+
+
 bool shouldUseCustomPath = false;
 bool shouldParseAll = false;
 CheckArgs();
@@ -26,6 +28,13 @@ try
         MapAndKey map = parser.ParseFirst();
         maps = [map];
     }
+
+    return;
+    RNN<Map> rnn = new(
+        steps: 10,
+        featuresPerStep: 5,
+        maps: [.. maps.Select(mapAndKey => mapAndKey.map)]
+    );
 }
 catch (Exception e)
 {

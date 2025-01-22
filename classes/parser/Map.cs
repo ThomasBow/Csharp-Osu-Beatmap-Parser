@@ -3,8 +3,11 @@
 
 using Tensorflow.NumPy;
 
+[Serializable]
 public class Map : ITrainingData
 {
+    public int version;
+
     public readonly GeneralSection generalSection;
     //public readonly MetaDataSection metaDataSection;
     public readonly DifficultySection difficultySection;

@@ -14,19 +14,33 @@ public class OsuMapParser
 
     public List<MapAndKey> ParseAllMaps()
     {
-        List<MapAndKey> maps = [];
+        List<MapAndKey> parsedMaps = [];
         string[] files = Directory.GetFiles(osuMapsPath, "*.osu", SearchOption.AllDirectories);
+
+        List<MapAndKey> cachedMaps = Cache.GetCachedMaps(osuMapsPath)
+            .Where(mapAndKey => mapAndKey.map.version == Cache.VERSION)
+            .ToList();
 
         foreach (var file in files)
         {
-            Map map = ParseMap(file);
             string key = Path.GetFileNameWithoutExtension(file);
 
+            if (cachedMaps.Any(mapAndKey => mapAndKey.key == key))
+            {
+                continue;
+            }
+
+            Map map = ParseMap(file);
+
             MapAndKey mapAndKey = new(key, map);
-            maps.Add(mapAndKey);
+            parsedMaps.Add(mapAndKey);
         }
 
-        return maps;
+        Cache.CacheMaps(parsedMaps, osuMapsPath);
+
+        List<MapAndKey> allMaps = cachedMaps.Concat(parsedMaps).ToList();
+
+        return allMaps;
     }
 
     public MapAndKey ParseFirst()
@@ -48,35 +62,5 @@ public class OsuMapParser
 
         Map map = new(lines);
         return map;
-    }
-
-    public void CacheMaps(List<MapAndKey> maps)
-    {
-        foreach (MapAndKey mapAndKey in maps)
-        {
-            string json = JsonSerializer.Serialize(mapAndKey.map);
-            string path = $"{osuMapsPath}/cached/{mapAndKey.key}.json";
-            File.WriteAllText(path, json);
-        }
-    }
-
-    private MapAndKey? GetMapIfChached(string key)
-    {
-        string path = $"{osuMapsPath}/cached/{key}.json";
-
-        MapAndKey? mapAndKey = null;
-        if (File.Exists(path))
-        {
-            mapAndKey = GetCachedMap(path, key);
-        }
-        return mapAndKey;
-    }
-
-    private MapAndKey GetCachedMap(string path, string key)
-    {
-        string json = File.ReadAllText(path);
-        Map map = JsonSerializer.Deserialize<Map>(json) ?? throw new Exception("Failed to deserialize map");
-        MapAndKey mapAndKey = new(key, map);
-        return mapAndKey;
     }
 }
