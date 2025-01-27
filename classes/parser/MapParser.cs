@@ -12,55 +12,86 @@ public class OsuMapParser
         this.osuMapsPath = osuMapsPath;
     }
 
-    public List<MapAndKey> ParseAllMaps()
+    public IEnumerable<Map> ParseAllMaps(bool useCache = false)
     {
-        List<MapAndKey> parsedMaps = [];
-        string[] files = Directory.GetFiles(osuMapsPath, "*.osu", SearchOption.AllDirectories);
+        string[] folders = Directory.GetDirectories(osuMapsPath);
 
-        List<MapAndKey> cachedMaps = Cache.GetCachedMaps(osuMapsPath)
-            .Where(mapAndKey => mapAndKey.map.version == Cache.VERSION)
-            .ToList();
+        foreach (string folder in folders)
+        {
+            string[] files = Directory.GetFiles(folder, "*.osu", SearchOption.AllDirectories);
+            if (useCache)
+            {
+                return ParseAllMapsWithCache(files);
+            }
+            else
+            {
+                return ParseAllMapsWithoutCache(files);
+            }
+        }
+        return [];
+    }
+
+
+
+    private IEnumerable<Map> ParseAllMapsWithCache(string[] files)
+    {
+        List<Map> parsedMaps = [];
+
+        IEnumerable<Map> cachedMaps = Cache.GetCachedMaps(osuMapsPath)
+            .Where(map => map.version == Cache.VERSION);
 
         foreach (var file in files)
         {
             string key = Path.GetFileNameWithoutExtension(file);
 
-            if (cachedMaps.Any(mapAndKey => mapAndKey.key == key))
+            if (cachedMaps.Any(map => map.key == key))
             {
                 continue;
             }
 
             Map map = ParseMap(file);
 
-            MapAndKey mapAndKey = new(key, map);
-            parsedMaps.Add(mapAndKey);
+            parsedMaps.Add(map);
         }
 
         Cache.CacheMaps(parsedMaps, osuMapsPath);
 
-        List<MapAndKey> allMaps = cachedMaps.Concat(parsedMaps).ToList();
+        IEnumerable<Map> allMaps = cachedMaps.Concat(parsedMaps);
 
         return allMaps;
     }
 
-    public MapAndKey ParseFirst()
+    private IEnumerable<Map> ParseAllMapsWithoutCache(string[] files)
+    {
+        List<Map> parsedMaps = [];
+
+        foreach (var file in files)
+        {
+            Map map = ParseMap(file);
+            parsedMaps.Add(map);
+        }
+
+        return parsedMaps;
+    }
+
+    public Map ParseFirst()
     {
         string[] files = Directory.GetFiles(osuMapsPath, "*.osu", SearchOption.AllDirectories);
 
-        Map map = ParseMap(files[0]);
-        string key = Path.GetFileNameWithoutExtension(files[0]);
 
-        MapAndKey mapAndKey = new(key, map);
-        return mapAndKey;
+        Map map = ParseMap(files[0]);
+
+        return map;
     }
 
-    public Map ParseMap(string osuMapPath)
+    public static Map ParseMap(string osuMapPath)
     {
         Debugger.currentLine = osuMapPath;
 
         string[] lines = File.ReadAllLines(osuMapPath);
 
-        Map map = new(lines);
+        string key = Path.GetFileNameWithoutExtension(osuMapPath);
+        Map map = new(key, lines);
         return map;
     }
 }

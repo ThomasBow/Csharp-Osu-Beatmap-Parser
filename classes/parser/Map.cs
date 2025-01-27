@@ -6,7 +6,8 @@ using Tensorflow.NumPy;
 [Serializable]
 public class Map : ITrainingData
 {
-    public int version;
+    public int version { get; private set; }
+    public string key { get; private set; }
 
     public readonly GeneralSection generalSection;
     //public readonly MetaDataSection metaDataSection;
@@ -14,8 +15,11 @@ public class Map : ITrainingData
     public readonly TimingPointsSection timingPointsSection;
     public readonly HitObjectsSection hitObjectsSection;
 
-    public Map(string[] osuMapFileLines)
+    public Map(string key, string[] osuMapFileLines)
     {
+        version = Cache.VERSION;
+        this.key = key;
+
         GeneralSection? generalSection = null;
         //MetaDataSection? metaDataSection = null;
         DifficultySection? difficultySection = null;

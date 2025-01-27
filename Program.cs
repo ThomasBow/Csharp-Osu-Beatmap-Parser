@@ -18,22 +18,20 @@ try
 
     OsuMapParser parser = new(folderPath);
 
-    List<MapAndKey> maps;
+    IEnumerable<Map> maps;
     if (shouldParseAll)
     {
         maps = parser.ParseAllMaps();
     }
     else
     {
-        MapAndKey map = parser.ParseFirst();
+        Map map = parser.ParseFirst();
         maps = [map];
     }
-
-    return;
     RNN<Map> rnn = new(
         steps: 10,
         featuresPerStep: 5,
-        maps: [.. maps.Select(mapAndKey => mapAndKey.map)]
+        maps: maps
     );
 }
 catch (Exception e)

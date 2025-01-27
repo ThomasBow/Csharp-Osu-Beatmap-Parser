@@ -5,11 +5,11 @@ using System.Text.Json;
 
 public static class Cache
 {
-    public const int VERSION = 1;
+    public const int VERSION = 2;
 
-    public static List<MapAndKey> GetCachedMaps(string osuMapsPath)
+    public static List<Map> GetCachedMaps(string osuMapsPath)
     {
-        List<MapAndKey> maps = [];
+        List<Map> maps = [];
         string[] files = Directory.GetFiles($"{osuMapsPath}/cached", "*.json", SearchOption.AllDirectories);
 
         foreach (var file in files)
@@ -19,22 +19,21 @@ public static class Cache
             string json = File.ReadAllText(file);
             Map map = JsonSerializer.Deserialize<Map>(json) ?? throw new Exception("Failed to deserialize map");
 
-            maps.Add(new(key, map));
+            maps.Add(map);
         }
 
         return maps;
     }
 
-    public static void CacheMaps(List<MapAndKey> maps, string osuMapsPath)
+    public static void CacheMaps(List<Map> maps, string osuMapsPath)
     {
         string cachePath = $"{osuMapsPath}/cached";
         Directory.CreateDirectory(cachePath);
 
-        foreach (MapAndKey mapAndKey in maps)
+        foreach (Map map in maps)
         {
-            mapAndKey.map.version = VERSION;
-            string json = JsonSerializer.Serialize(mapAndKey.map);
-            string path = $"{cachePath}/{mapAndKey.key}.json";
+            string json = JsonSerializer.Serialize(map);
+            string path = $"{cachePath}/{map.key}.json";
             File.WriteAllText(path, json);
         }
     }
