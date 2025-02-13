@@ -1,10 +1,9 @@
 
 
 
-using Tensorflow.NumPy;
 
 [Serializable]
-public class Map : ITrainingData
+public class Map
 {
     public int version { get; private set; }
     public string key { get; private set; }
@@ -61,15 +60,5 @@ public class Map : ITrainingData
         this.difficultySection = difficultySection ?? throw new Exception("Difficulty section not found");
         this.timingPointsSection = timingPointsSection ?? throw new Exception("TimingPoints section not found");
         this.hitObjectsSection = hitObjectsSection ?? throw new Exception("HitObjects section not found");
-    }
-
-    public NDArray X()
-    {
-        throw new NotImplementedException();
-    }
-
-    public NDArray Y()
-    {
-        throw new NotImplementedException();
     }
 }

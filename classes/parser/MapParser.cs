@@ -12,10 +12,11 @@ public class OsuMapParser
         this.osuMapsPath = osuMapsPath;
     }
 
-    public IEnumerable<Map> ParseAllMaps(bool useCache = false)
+    public IEnumerable<MapAndSong> ParseAllMaps(bool useCache = false)
     {
         string[] folders = Directory.GetDirectories(osuMapsPath);
 
+        List<Map> maps = [];
         foreach (string folder in folders)
         {
             string[] files = Directory.GetFiles(folder, "*.osu", SearchOption.AllDirectories);
