@@ -3,7 +3,7 @@
 
 
 [Serializable]
-public class Map
+public class Map : ITrainingData
 {
     public int version { get; private set; }
     public string key { get; private set; }
@@ -60,5 +60,10 @@ public class Map
         this.difficultySection = difficultySection ?? throw new Exception("Difficulty section not found");
         this.timingPointsSection = timingPointsSection ?? throw new Exception("TimingPoints section not found");
         this.hitObjectsSection = hitObjectsSection ?? throw new Exception("HitObjects section not found");
+    }
+
+    public (int[] features, int[] labels) GetFeaturesAndLabels()
+    {
+        throw new NotImplementedException();
     }
 }

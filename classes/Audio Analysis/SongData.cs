@@ -3,7 +3,7 @@
 
 using NAudio.Wave;
 
-public class SongData
+public class SongData : ITrainingData
 {
     public SongData(string osuMapFolderPath)
     {
@@ -21,5 +21,10 @@ public class SongData
         {
             samples[i] = BitConverter.ToInt16(samplesBuffer, i * 2) / 32768f;
         }
+    }
+
+    public (int[] features, int[] labels) GetFeaturesAndLabels()
+    {
+        throw new NotImplementedException();
     }
 }

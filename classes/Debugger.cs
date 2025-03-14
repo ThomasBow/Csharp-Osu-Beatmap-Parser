@@ -10,5 +10,8 @@ public class Debugger
         Console.WriteLine("An error occurred while parsing the beatmap, at line:\n" + currentLine);
         Console.WriteLine("Exception: " + e.Message);
         Console.WriteLine("Stack trace: " + e.StackTrace);
+        Console.WriteLine("Press any key to continue...");
+
+        Console.ReadKey();
     }
 }

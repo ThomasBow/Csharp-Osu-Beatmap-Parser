@@ -1,10 +1,9 @@
 
 
 
-using Tensorflow.NumPy;
+using Tensorflow;
 
 public interface ITrainingData
 {
-    public abstract NDArray X();
-    public abstract NDArray Y();
+    public (int[] features, int[] labels) GetFeaturesAndLabels();
 }

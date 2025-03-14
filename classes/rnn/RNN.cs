@@ -15,7 +15,7 @@ public class RNN<Data> where Data : ITrainingData
 {
 
 
-    public RNN(int steps, int featuresPerStep, IEnumerable<Data> maps)
+    public RNN(int steps, int featuresPerStep, IEnumerable<Data> trainingData)
     {
         var inputShape = (steps, featuresPerStep);
 

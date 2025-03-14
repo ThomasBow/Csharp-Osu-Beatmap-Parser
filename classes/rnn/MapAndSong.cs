@@ -3,8 +3,6 @@
 
 
 
-using Tensorflow.NumPy;
-
 public class MapAndSong : ITrainingData
 {
 
@@ -17,13 +15,14 @@ public class MapAndSong : ITrainingData
         Song = song;
     }
 
-    public NDArray X()
+    public (int[] features, int[] labels) GetFeaturesAndLabels()
     {
-        throw new NotImplementedException();
-    }
+        (int[] mapFeatures, int[] mapLabels) = Map.GetFeaturesAndLabels();
+        (int[] songFeatures, int[] songLabels) = Song.GetFeaturesAndLabels();
 
-    public NDArray Y()
-    {
-        throw new NotImplementedException();
+        int[] features = [.. mapFeatures, .. songFeatures];
+        int[] labels = [.. mapLabels, .. songLabels];
+
+        return (features, labels);
     }
 }
