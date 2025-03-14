@@ -7,9 +7,9 @@ public static class Cache
 {
     public const int VERSION = 2;
 
-    public static List<Map> GetCachedMaps(string osuMapsPath)
+    public static List<MapAndSong> GetCachedMaps(string osuMapsPath)
     {
-        List<Map> maps = [];
+        List<MapAndSong> maps = [];
         string[] files = Directory.GetFiles($"{osuMapsPath}/cached", "*.json", SearchOption.AllDirectories);
 
         foreach (var file in files)
@@ -17,23 +17,23 @@ public static class Cache
             string key = Path.GetFileNameWithoutExtension(file);
 
             string json = File.ReadAllText(file);
-            Map map = JsonSerializer.Deserialize<Map>(json) ?? throw new Exception("Failed to deserialize map");
+            MapAndSong parsed = JsonSerializer.Deserialize<MapAndSong>(json) ?? throw new Exception("Failed to deserialize map");
 
-            maps.Add(map);
+            maps.Add(parsed);
         }
 
         return maps;
     }
 
-    public static void CacheMaps(List<Map> maps, string osuMapsPath)
+    public static void CacheMaps(List<MapAndSong> mapAndSongs, string osuMapsPath)
     {
         string cachePath = $"{osuMapsPath}/cached";
         Directory.CreateDirectory(cachePath);
 
-        foreach (Map map in maps)
+        foreach (MapAndSong mapAndSong in mapAndSongs)
         {
-            string json = JsonSerializer.Serialize(map);
-            string path = $"{cachePath}/{map.key}.json";
+            string json = JsonSerializer.Serialize(mapAndSong);
+            string path = $"{cachePath}/{mapAndSong.Map.key}.json";
             File.WriteAllText(path, json);
         }
     }

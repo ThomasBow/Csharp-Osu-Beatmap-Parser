@@ -34,58 +34,58 @@ public class OsuMapParser
 
 
 
-    private IEnumerable<Map> ParseAllMapsWithCache(string[] files)
+    private IEnumerable<MapAndSong> ParseAllMapsWithCache(string[] files)
     {
-        List<Map> parsedMaps = [];
+        List<MapAndSong> parsedMaps = [];
 
-        IEnumerable<Map> cachedMaps = Cache.GetCachedMaps(osuMapsPath)
-            .Where(map => map.version == Cache.VERSION);
+        IEnumerable<MapAndSong> cachedMaps = Cache.GetCachedMaps(osuMapsPath)
+            .Where(mapAndSong => mapAndSong.Map.version == Cache.VERSION);
 
         foreach (var file in files)
         {
             string key = Path.GetFileNameWithoutExtension(file);
 
-            if (cachedMaps.Any(map => map.key == key))
+            if (cachedMaps.Any(mapAndSong => mapAndSong.Map.key == key))
             {
                 continue;
             }
 
-            Map map = ParseMap(file);
+            MapAndSong mapAndSong = ParseMap(file);
 
-            parsedMaps.Add(map);
+            parsedMaps.Add(mapAndSong);
         }
 
         Cache.CacheMaps(parsedMaps, osuMapsPath);
 
-        IEnumerable<Map> allMaps = cachedMaps.Concat(parsedMaps);
+        IEnumerable<MapAndSong> allMaps = cachedMaps.Concat(parsedMaps);
 
         return allMaps;
     }
 
-    private IEnumerable<Map> ParseAllMapsWithoutCache(string[] files)
+    private IEnumerable<MapAndSong> ParseAllMapsWithoutCache(string[] files)
     {
-        List<Map> parsedMaps = [];
+        List<MapAndSong> parsedMaps = [];
 
         foreach (var file in files)
         {
-            Map map = ParseMap(file);
-            parsedMaps.Add(map);
+            MapAndSong mapAndSong = ParseMap(file);
+            parsedMaps.Add(mapAndSong);
         }
 
         return parsedMaps;
     }
 
-    public Map ParseFirst()
+    public MapAndSong ParseFirst()
     {
         string[] files = Directory.GetFiles(osuMapsPath, "*.osu", SearchOption.AllDirectories);
 
 
-        Map map = ParseMap(files[0]);
+        MapAndSong mapAndSong = ParseMap(files[0]);
 
-        return map;
+        return mapAndSong;
     }
 
-    public static Map ParseMap(string osuMapPath)
+    public static MapAndSong ParseMap(string osuMapPath)
     {
         Debugger.currentLine = osuMapPath;
 
@@ -93,6 +93,9 @@ public class OsuMapParser
 
         string key = Path.GetFileNameWithoutExtension(osuMapPath);
         Map map = new(key, lines);
-        return map;
+
+        SongData songData = new(osuMapPath);
+
+        return new(map, songData);
     }
 }
