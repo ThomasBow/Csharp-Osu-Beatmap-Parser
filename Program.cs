@@ -18,21 +18,16 @@ try
 
     OsuMapParser parser = new(folderPath);
 
-    IEnumerable<MapAndSong> maps;
+    IEnumerable<Map> maps;
     if (shouldParseAll)
     {
         maps = parser.ParseAllMaps();
     }
     else
     {
-        MapAndSong map = parser.ParseFirst();
+        Map map = parser.ParseFirst();
         maps = [map];
     }
-    RNN<MapAndSong> rnn = new(
-        steps: 10,
-        featuresPerStep: 5,
-        trainingData: maps
-    );
 }
 catch (Exception e)
 {

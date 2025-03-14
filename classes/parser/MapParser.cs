@@ -1,91 +1,53 @@
 
 
 
-using System.Text.Json;
+
 
 public class OsuMapParser
 {
-    readonly string osuMapsPath;
+    readonly string osuMapsFolderPath;
 
-    public OsuMapParser(string osuMapsPath)
+    public OsuMapParser(string osuMapsFolderPath)
     {
-        this.osuMapsPath = osuMapsPath;
+        this.osuMapsFolderPath = osuMapsFolderPath;
     }
 
-    public IEnumerable<MapAndSong> ParseAllMaps(bool useCache = false)
+    public IEnumerable<Map> ParseAllMaps(bool useCache = false)
     {
-        string[] folders = Directory.GetDirectories(osuMapsPath);
+        string[] folders = Directory.GetDirectories(osuMapsFolderPath);
 
         List<Map> maps = [];
         foreach (string folder in folders)
         {
-            string[] files = Directory.GetFiles(folder, "*.osu", SearchOption.AllDirectories);
-            if (useCache)
-            {
-                return ParseAllMapsWithCache(files);
-            }
-            else
-            {
-                return ParseAllMapsWithoutCache(files);
-            }
+            string[] osuFiles = Directory.GetFiles(folder, "*.osu", SearchOption.AllDirectories);
+            return ParseAllMapsWithoutCache(osuFiles);
         }
         return [];
     }
 
-
-
-    private IEnumerable<MapAndSong> ParseAllMapsWithCache(string[] files)
+    private IEnumerable<Map> ParseAllMapsWithoutCache(string[] osuFiles)
     {
-        List<MapAndSong> parsedMaps = [];
+        List<Map> parsedMaps = [];
 
-        IEnumerable<MapAndSong> cachedMaps = Cache.GetCachedMaps(osuMapsPath)
-            .Where(mapAndSong => mapAndSong.Map.version == Cache.VERSION);
-
-        foreach (var file in files)
+        foreach (var osuFile in osuFiles)
         {
-            string key = Path.GetFileNameWithoutExtension(file);
-
-            if (cachedMaps.Any(mapAndSong => mapAndSong.Map.key == key))
-            {
-                continue;
-            }
-
-            MapAndSong mapAndSong = ParseMap(file);
-
-            parsedMaps.Add(mapAndSong);
-        }
-
-        Cache.CacheMaps(parsedMaps, osuMapsPath);
-
-        IEnumerable<MapAndSong> allMaps = cachedMaps.Concat(parsedMaps);
-
-        return allMaps;
-    }
-
-    private IEnumerable<MapAndSong> ParseAllMapsWithoutCache(string[] files)
-    {
-        List<MapAndSong> parsedMaps = [];
-
-        foreach (var file in files)
-        {
-            MapAndSong mapAndSong = ParseMap(file);
-            parsedMaps.Add(mapAndSong);
+            Map map = ParseMap(osuFile);
+            parsedMaps.Add(map);
         }
 
         return parsedMaps;
     }
 
-    public MapAndSong ParseFirst()
+    public Map ParseFirst()
     {
-        string[] files = Directory.GetFiles(osuMapsPath, "*.osu", SearchOption.AllDirectories);
+        string[] osuFiles = Directory.GetFiles(osuMapsFolderPath, "*.osu", SearchOption.AllDirectories);
 
+        Map map = ParseMap(osuFiles[0]);
 
-        MapAndSong mapAndSong = ParseMap(files[0]);
-
-        return mapAndSong;
+        return map;
     }
 
-    public static MapAndSong ParseMap(string osuMapPath)
+    public static Map ParseMap(string osuMapPath)
     {
         Debugger.currentLine = osuMapPath;
 
@@ -94,8 +56,6 @@ public class OsuMapParser
         string key = Path.GetFileNameWithoutExtension(osuMapPath);
         Map map = new(key, lines);
 
-        SongData songData = new(osuMapPath);
-
-        return new(map, songData);
+        return map;
     }
 }

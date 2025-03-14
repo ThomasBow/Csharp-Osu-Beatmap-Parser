@@ -3,7 +3,7 @@
 
 
 [Serializable]
-public class Map : ITrainingData
+public class Map
 {
     public int version { get; private set; }
     public string key { get; private set; }
@@ -16,7 +16,6 @@ public class Map : ITrainingData
 
     public Map(string key, string[] osuMapFileLines)
     {
-        version = Cache.VERSION;
         this.key = key;
 
         GeneralSection? generalSection = null;
